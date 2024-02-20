@@ -152,12 +152,14 @@ class _HomeScreenState extends State<HomeScreen>
               color: Colors.white.withOpacity(0.0),
               child: Column(
                 children: [
-                  Flexible(child: Container(), flex: 20),
+                  Flexible(child: Container(), flex: 7),
                   Flexible(
-                    flex: 3,
-                    child: LoginWithKakaoWidget(),
+                    flex: 1,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: LoginWithKakaoWidget(),
+                    ),
                   ),
-                  Flexible(child: Container(), flex: 1),
                 ],
               ),
             ),
