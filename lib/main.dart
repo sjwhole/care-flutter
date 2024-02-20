@@ -6,6 +6,7 @@ import 'package:care/screens/shopping_screen.dart';
 import 'package:care/screens/subscription_screen.dart';
 import 'package:care/utils/jwt.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:kakao_flutter_sdk_common/kakao_flutter_sdk_common.dart';
 import 'package:provider/provider.dart';
 
@@ -43,6 +44,10 @@ void main() async {
     ],
     child: const MyApp(),
   ));
+
+  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+    systemNavigationBarColor: Colors.white,
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -70,7 +75,7 @@ class MyApp extends StatelessWidget {
         //
         // This works for code too, not just values: Most code changes can be
         // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
         useMaterial3: true,
       ),
       home: MyHomePage(),
@@ -139,6 +144,8 @@ class _MyHomePageState extends State<MyHomePage> {
               highlightColor: Colors.transparent,
             ),
             child: BottomNavigationBar(
+              backgroundColor: Colors.white,
+              selectedItemColor: Colors.greenAccent.shade200,
               elevation: 16,
               items: const [
                 BottomNavigationBarItem(
