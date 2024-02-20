@@ -93,8 +93,8 @@ class SubscriptionCarouselWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return CarouselSlider(
         options: CarouselOptions(
-          aspectRatio: 16 / 9,
-          viewportFraction: 0.8,
+          aspectRatio: 3,
+          viewportFraction: 1.2,
           initialPage: 0,
           enableInfiniteScroll: true,
           // reverse: false,
@@ -145,7 +145,7 @@ class _CarouselWithIndicatorState extends State<CarouselWithIndicatorDemo> {
             options: CarouselOptions(
                 autoPlay: true,
                 enlargeCenterPage: true,
-                aspectRatio: 2.0,
+                aspectRatio: 1.0,
                 onPageChanged: (index, reason) {
                   setState(() {
                     _current = index;

@@ -1,4 +1,6 @@
 import 'package:care/providers/jwt_provider.dart';
+import 'package:care/providers/subscription_provider.dart';
+import 'package:care/providers/user_provider.dart';
 import 'package:care/screens/home_screen.dart';
 import 'package:care/screens/shopping_screen.dart';
 import 'package:care/screens/subscription_screen.dart';
@@ -23,12 +25,24 @@ void main() async {
   String? jwt = await loadJWTFromStorage();
   print(jwt);
 
-  runApp(
-    ChangeNotifierProvider(
-      create: (context) => JwtProvider(jwt),
-      child: const MyApp(),
-    ),
-  );
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider(
+        create: (context) => JwtProvider(jwt),
+      ),
+      ChangeNotifierProxyProvider<JwtProvider, SubscriptionProvider>(
+        update: (_, jwtProvider, subscriptionProvider) => subscriptionProvider!,
+        create: (context) => SubscriptionProvider(
+            Provider.of<JwtProvider>(context, listen: false)),
+      ),
+      ChangeNotifierProxyProvider<JwtProvider, UserProvider>(
+        update: (_, jwtProvider, userProvider) => userProvider!,
+        create: (context) =>
+            UserProvider(Provider.of<JwtProvider>(context, listen: false)),
+      ),
+    ],
+    child: const MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -38,6 +52,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
         // This is the theme of your application.

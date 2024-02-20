@@ -1,40 +1,12 @@
+import 'package:care/providers/user_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:grpc/grpc.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart' as Kakao;
 import 'package:provider/provider.dart';
 
-import '../grpc/generated/user.pbgrpc.dart';
 import '../providers/jwt_provider.dart';
 
 class LoginWithKakaoWidget extends StatelessWidget {
   const LoginWithKakaoWidget({super.key});
-
-  Future<void> _sendRPC(
-      {required BuildContext context, required String accessToken}) async {
-    final channel = ClientChannel(
-      '192.168.30.3',
-      port: 50051,
-      options: const ChannelOptions(credentials: ChannelCredentials.insecure()),
-    );
-    final stub = UserServiceClient(channel);
-
-    try {
-      var response = await stub.getUserByKakaoAccessToken(
-          GetUserByKakaoAccessTokenRequest()..kakaoAccessToken = accessToken);
-      print('Greeter client received: ${response.name}');
-    } on GrpcError catch (e) {
-      print('Caught error: $e');
-      if (e.codeName == "NOT_FOUND") {
-        print("회원가입 진행");
-        var response = await stub
-            .createUser(CreateUserRequest()..kakaoAccessToken = accessToken);
-        //
-        // })
-        toastMessage(context, "신규 회원 가입을 축하드려요 ${response.name}님!");
-      }
-    }
-    await channel.shutdown();
-  }
 
   void toastMessage(BuildContext context, String message) {
     ScaffoldMessenger.of(context)
@@ -52,8 +24,10 @@ class LoginWithKakaoWidget extends StatelessWidget {
           print('카카오계정으로 로그인 성공 ${token.accessToken}');
           if (!context.mounted) return;
           final jwtProvider = Provider.of<JwtProvider>(context, listen: false);
+          final userProvider =
+              Provider.of<UserProvider>(context, listen: false);
 
-          var newJwt = await jwtProvider.userService
+          var newJwt = await userProvider.userService
               .getJWTByKakaoAccessToken(token.accessToken);
 
           try {
@@ -85,7 +59,7 @@ class LoginWithKakaoWidget extends StatelessWidget {
 
           jwtProvider.jwt = newJwt;
 
-          if(!context.mounted) return;
+          if (!context.mounted) return;
           var controller = PrimaryScrollController.of(context);
           controller.animateTo(0,
               duration: Duration(seconds: 1), curve: Curves.fastOutSlowIn);

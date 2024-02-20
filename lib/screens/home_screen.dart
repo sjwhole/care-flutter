@@ -1,14 +1,15 @@
 import 'dart:ui';
 
 import 'package:care/models/category_detail_model.dart';
+import 'package:care/providers/user_provider.dart';
 import 'package:care/resources/category_indicator_color.dart';
 import 'package:care/screens/detail_report_screen.dart';
 import 'package:care/widgets/login_with_kakao_widget.dart';
 import 'package:care/widgets/logout_widget.dart';
+import 'package:care/widgets/subscription_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../grpc/generated/user.pb.dart';
 import '../providers/jwt_provider.dart';
 import '../widgets/category_widget.dart';
 import '../widgets/recent_line_graph_widget.dart';
@@ -49,7 +50,6 @@ class _HomeScreenState extends State<HomeScreen>
         score: 77,
         description: '상태양호'),
   ];
-  User user = User(name: "???");
 
   @override
   Widget build(BuildContext context) {
@@ -63,6 +63,8 @@ class _HomeScreenState extends State<HomeScreen>
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  GetSubscriptionWidget(),
+                  CreateSubscriptionWidget(),
                   Container(
                     margin: const EdgeInsets.all(20),
                     child: Column(
@@ -71,31 +73,11 @@ class _HomeScreenState extends State<HomeScreen>
                         Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              // Text(Provider.of<JwtProvider>(context).userService.getUser().name,
-                              //     style: TextStyle(
-                              //         color: Colors.black,
-                              //         fontWeight: FontWeight.bold,
-                              //         fontSize: 35)),
-                              FutureBuilder<User>(
-                                future: Provider.of<JwtProvider>(context)
-                                    .userService
-                                    .getUser(),
-                                builder: (context, snapshot) {
-                                  var text = "???";
-                                  if (snapshot.hasData) {
-                                    text = snapshot.data!.name;
-                                  } else if (snapshot.hasError) {
-                                    text = snapshot.error.toString();
-                                  } else {
-                                    return CircularProgressIndicator(); // Show loading indicator
-                                  }
-                                  return Text(text,
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 35));
-                                },
-                              ),
+                              Text(Provider.of<UserProvider>(context).user.name,
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 35,
+                                      fontWeight: FontWeight.bold)),
                               Text(' 님의',
                                   style: TextStyle(
                                       color: Colors.black, fontSize: 35)),
